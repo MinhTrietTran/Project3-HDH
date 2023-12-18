@@ -19,6 +19,7 @@
 #include "system.h"
 #include "addrspace.h"
 #include "noff.h"
+#include "bitmap.h"
 #ifdef HOST_SPARC
 #include <strings.h>
 #endif
@@ -89,7 +90,11 @@ AddrSpace::AddrSpace(OpenFile *executable)
     pageTable = new TranslationEntry[numPages];
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-	pageTable[i].physicalPage = i;
+	// Thay pageTable[i].physicalPage = i; thanh ham tim trang trong va danh dau da su dung
+    //pageTable[i].physicalPage = i;
+    int freePage = freePages->Find();
+    pageTable[i].physicalPage = freePage;
+
 	pageTable[i].valid = TRUE;
 	pageTable[i].use = FALSE;
 	pageTable[i].dirty = FALSE;
@@ -97,6 +102,9 @@ AddrSpace::AddrSpace(OpenFile *executable)
 					// a separate page, we could set its 
 					// pages to be read-only
     }
+
+    // Xoa bitmap
+    delete freePages
     
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment

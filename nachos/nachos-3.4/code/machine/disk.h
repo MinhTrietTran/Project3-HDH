@@ -45,8 +45,8 @@
 // disks these days now come with a track buffer.
 //
 // The track buffer simulation can be disabled by compiling with -DNOTRACKBUF
-
-#define SectorSize 		128	// number of bytes per disk sector
+// Sua sector size tu 128 len 512
+#define SectorSize 		512	// number of bytes per disk sector
 #define SectorsPerTrack 	32	// number of sectors per disk track 
 #define NumTracks 		32	// number of tracks per disk
 #define NumSectors 		(SectorsPerTrack * NumTracks)
