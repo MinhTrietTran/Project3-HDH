@@ -9,6 +9,11 @@
 #include "copyright.h"
 #include "bitmap.h"
 
+// Thêm vào đầu file bitmap.cc
+bool Bitmap::CheckEnoughMemory(int numNeeded) {
+    return NumClear() >= numNeeded;
+}
+
 //----------------------------------------------------------------------
 // BitMap::BitMap
 // 	Initialize a bitmap with "nitems" bits, so that every bit is clear.

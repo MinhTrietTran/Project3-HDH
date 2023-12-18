@@ -60,6 +60,10 @@ SwapHeader (NoffHeader *noffH)
 //
 //	"executable" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
+// Thêm vào đầu file addrspace.cc
+Bitmap *gPhysPageBitMap;
+
+
 // Hàm kiểm tra xem có đủ bộ nhớ cho quá trình hay không
 bool AddrSpace::CheckEnoughMemory() {
     // Thực hiện kiểm tra số lượng trang còn trống
@@ -75,7 +79,7 @@ int AddrSpace::CountFreePages() {
     return machine->bitmap->NumClear();
 }
 
-AddrSpace::AddrSpace(OpenFile *executable)
+AddrSpace::AddrSpace(OpenFile *executable, int processId)
 {
     NoffHeader noffH;
     unsigned int i, size;
@@ -100,13 +104,22 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
 					numPages, size);
+
+     // Kiểm tra xem có đủ bộ nhớ cho quá trình hay không
+    if (!gPhysPageBitMap->CheckEnoughMemory(numPages)) {
+        printf("\nAddrSpace:Load: not enough memory for new process..!");
+        numPages = 0;
+        delete executable;
+        addrLock->Release();
+        return;
+    }
+
 // first, set up the translation 
     pageTable = new TranslationEntry[numPages];
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-	// Thay pageTable[i].physicalPage = i; thanh ham tim trang trong va danh dau da su dung
-    //pageTable[i].physicalPage = i;
-    int freePage = freePages->Find();
+	// Thay đổi ở đây: tìm trang trống và đánh dấu đã sử dụng
+    int freePage = gPhysPageBitMap->Find();
     pageTable[i].physicalPage = freePage;
 
 	pageTable[i].valid = TRUE;
