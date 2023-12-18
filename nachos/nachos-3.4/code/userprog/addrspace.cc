@@ -60,6 +60,20 @@ SwapHeader (NoffHeader *noffH)
 //
 //	"executable" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
+// Hàm kiểm tra xem có đủ bộ nhớ cho quá trình hay không
+bool AddrSpace::CheckEnoughMemory() {
+    // Thực hiện kiểm tra số lượng trang còn trống
+    if (numPages > CountFreePages()) {
+        printf("\nAddrSpace:Load: not enough memory for new process..!");
+        return false;
+    }
+    return true;
+}
+
+// Hàm tính số trang còn trống
+int AddrSpace::CountFreePages() {
+    return machine->bitmap->NumClear();
+}
 
 AddrSpace::AddrSpace(OpenFile *executable)
 {
