@@ -1,19 +1,25 @@
 #include "ptable.h"
+#include <string.h>
 
 PTable::PTable(int size) {
+    if (size < 0)
+        return;
     psize = size;
+     // Khởi tạo Bitmap với kích thước là số đối tượng PCB có thể chứa
+    bm = new BitMap(psize);
     bmsem = new Semaphore("bmsem", 1);
 
-    // Khởi tạo Bitmap với kích thước là số đối tượng PCB có thể chứa
-    bm = BitMap(psize);
+   
 
     // Khởi tạo mảng PCB với các đối tượng PCB
     for (int i = 0; i < psize; i++) {
         pcb[i] = nullptr;
     }
-
+    bm -> Mark(0);
     // Tạo đối tượng PCB cho tiến trình cha ở vị trí 0
     pcb[0] = new PCB(0);
+    pcb[0] = SetFileName("./test/scheduler");
+    pcb[0]->parentID = -1;
 }
 
 PTable::~PTable() {
@@ -28,13 +34,30 @@ PTable::~PTable() {
 }
 
 int PTable::ExecUpdate(char* name) {
+    // Goi P de tranh tinh trang hai tien trinh duoc nap cung luc
     bmsem->P();
+
+  
+
+    // Kiem tra su ton tai cua chuong trinh "name" bang cach goi phuong thuc Open cua fileSystem
+    if(name == NULL) {
+        printf("\nPTable::Exec : Can not execute name is NULL.\n");
+        bmsem->V();
+        return -1;
+    }
+
+    // So sanh ten chuong trinh va ten cua currentThread de chan chac chuong trinh khong goi thuc thi chinh no
+    if(strcmp(name,"./test/scheduler") == 0 || strcmp(name, currentThread->getName()) == 0) {
+        printf("\nPTable::Exec : Can not execute itself. \n");
+        bmsem->V();
+        return -1;
+    }
 
     // Tìm một slot trống để lưu thông tin của tiến trình mới
     int slot = GetFreeSlot();
 
     // Kiểm tra xem có slot trống không
-    if (slot == -1) {
+    if (slot < 0) {
         bmsem->V();
         return -1; // Không có slot trống
     }
@@ -44,12 +67,14 @@ int PTable::ExecUpdate(char* name) {
 
     // Set filename cho PCB
     pcb[slot]->SetFileName(name);
+    // ParentID la processID cua currentThread
+    pcb[slot]->parentID = currentThread->processID;
 
-    // Đánh dấu slot đã được sử dụng
-    bm.Mark(slot);
-
+    // Goi thuc thi phuong thuc Exec cua PCB
+    int pid = pcb[slot]->Exec(name,slot);
+    // Goi V()
     bmsem->V();
-    return slot; // Trả về process ID của tiến trình mới
+    return pid; // Trả về thuc thi cua PCB->Exec
 }
 
 int PTable::ExitUpdate(int ec) {
