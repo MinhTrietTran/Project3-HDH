@@ -78,35 +78,69 @@ int PTable::ExecUpdate(char* name) {
 }
 
 int PTable::ExitUpdate(int ec) {
-    int pid = currentThread->processID;
+    // Nếu tiến trình gọi là main process thì gọi Halt().
+	int id = currentThread->processID;
+	if(id == 0)
+	{
+		
+		currentThread->FreeSpace();		
+		interrupt->Halt();
+		return 0;
+	}
+    
+        if(IsExist(id) == false)
+	{
+		printf("\nPTable::ExitUpdate: This %d is not exist. Try again?", id);
+		return -1;
+	}
 
-    if (!IsExist(pid)) {
-        return -1; // Tiến trình không tồn tại trong bảng quản lý
-    }
 
-    bmsem->P();
-
-    // Xử lý cho system call SC_Exit
-    // ...
-
-    bm.Clear(pid); // Đánh dấu slot đã được giải phóng
-
-    bmsem->V();
-    return 0;
+	// Ngược lại gọi SetExitCode để đặt exitcode cho tiến trình gọi.
+	pcb[id]->SetExitCode(ec);
+	pcb[pcb[id]->parentID]->DecNumWait();
+    
+    // Gọi JoinRelease để giải phóng tiến trình cha đang đợi nó(nếu có) và ExitWait() để xin tiến trình cha
+    // cho phép thoát.
+	pcb[id]->JoinRelease();
+    // 
+	pcb[id]->ExitWait();
+	
+	Remove(id);
+	return ec;
 }
 
 int PTable::JoinUpdate(int id) {
-    if (!IsExist(id)) {
-        return -1; // Tiến trình không tồn tại trong bảng quản lý
-    }
+    // Ta kiểm tra tính hợp lệ của processID id và kiểm tra tiến trình gọi Join có phải là cha của tiến trình
+	// có processID là id hay không. Nếu không thỏa, ta báo lỗi hợp lý và trả về -1.
+	if(id < 0)
+	{
+		printf("\nPTable::JoinUpdate : id = %d", id);
+		return -1;
+	}
+	// Check if process running is parent process of process which joins
+	if(currentThread->processID != pcb[id]->parentID)
+	{
+		printf("\nPTable::JoinUpdate Can't join in process which is not it's parent process.\n");
+		return -1;
+	}
 
-    bmsem->P();
 
-    // Xử lý cho system call SC_Join
-    // ...
+    	// Tăng numwait và gọi JoinWait() để chờ tiến trình con thực hiện.
+	// Sau khi tiến trình con thực hiện xong, tiến trình đã được giải phóng
+	pcb[pcb[id]->parentID]->IncNumWait();
+	
 
-    bmsem->V();
-    return 0;
+	//pcb[id]->boolBG = 1;
+	
+	pcb[id]->JoinWait();
+
+	// Xử lý exitcode.	
+	int ec = pcb[id]->GetExitCode();
+        // ExitRelease() để cho phép tiến trình con thoát.
+	pcb[id]->ExitRelease();
+
+    // Successfully
+	return ec;
 }
 
 int PTable::GetFreeSlot() {
