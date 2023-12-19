@@ -1,12 +1,16 @@
-// system.cc
+// system.cc 
 //	Nachos initialization and cleanup routines.
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation
+// All rights reserved.  See copyright.h for copyright notice and limitation 
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
 #include "system.h"
+
+
+
+
 // This defines *all* of the global data structures used by Nachos.
 // These are all initialized and de-allocated by this file.
 
@@ -208,3 +212,4 @@ Cleanup()
     
     Exit(0);
 }
+

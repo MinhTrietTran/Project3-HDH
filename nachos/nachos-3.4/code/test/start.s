@@ -1,4 +1,4 @@
-/* Start.s
+/* Start.s 
  *	Assembly language assist for user programs running on top of Nachos.
  *
  *	Since we don't want to pull in the entire C library, we define
@@ -9,12 +9,12 @@
 #define IN_ASM
 #include "syscall.h"
 
-        .text
+        .text   
         .align  2
 
 /* -------------------------------------------------------------
  * __start
- *	Initialize running a C program, by calling "main".
+ *	Initialize running a C program, by calling "main". 
  *
  * 	NOTE: This has to be first, so that it gets loaded at location 0.
  *	The Nachos kernel always starts a program by jumping to location 0.
@@ -25,7 +25,7 @@
 	.ent	__start
 __start:
 	jal	main
-	move	$4,$0
+	move	$4,$0		
 	jal	Exit	 /* if we return from main, exit(0) */
 	.end __start
 
@@ -34,7 +34,7 @@ __start:
  *	Assembly language assist to make system calls to the Nachos kernel.
  *	There is one stub per system call, that places the code for the
  *	system call into register r2, and leaves the arguments to the
- *	system call alone (in other words, arg1 is in r4, arg2 is
+ *	system call alone (in other words, arg1 is in r4, arg2 is 
  *	in r5, arg3 is in r6, arg4 is in r7)
  *
  * 	The return value is in r2. This follows the standard C calling
@@ -74,13 +74,13 @@ Join:
 	j	$31
 	.end Join
 
-	.globl Create
-	.ent	Create
-Create:
-	addiu $2,$0,SC_Create
+	.globl CreateFile
+	.ent	CreateFile
+CreateFile:
+	addiu $2,$0,SC_CreateFile
 	syscall
 	j	$31
-	.end Create
+	.end CreateFile
 
 	.globl Open
 	.ent	Open
@@ -130,84 +130,96 @@ Yield:
 	j	$31
 	.end Yield
 
-//additional
-  .globl ReadInt
-  .ent ReadInt
+	.globl ReadInt
+	.ent ReadInt
 ReadInt:
-  addiu $2, $0, SC_ReadInt
-  syscall
-  j $31
-  .end ReadInt
+	addiu $2, $0, SC_ReadInt
+	syscall
+	j	$31
+	.end ReadInt 
 
-
-  .globl PrintInt
-  .ent PrintInt
+	.globl PrintInt
+	.ent PrintInt
 PrintInt:
-  addiu $2, $0, SC_PrintInt
-  syscall
-  j $31
-  .end PrintInt
+	addiu $2, $0, SC_PrintInt
+	syscall
+	j	$31
+	.end PrintInt
 
-
-  .globl ReadChar
-  .ent ReadChar
+	.globl ReadChar
+	.ent ReadChar
 ReadChar:
-  addiu $2, $0, SC_ReadChar
-  syscall
-  j $31
-  .end ReadChar
+	addiu $2, $0, SC_ReadChar
+	syscall
+	j	$31
+	.end ReadChar
 
-
-  .globl PrintChar
-  .ent PrintChar
+	.globl PrintChar
+	.ent PrintChar
 PrintChar:
-  addiu $2, $0, SC_PrintChar
-  syscall
-  j $31
-  .end PrintChar
+	addiu $2, $0, SC_PrintChar
+	syscall
+	j	$31
+	.end PrintChar
 
-  .globl ReadString
-  .ent ReadString
+	.globl ReadString
+	.ent ReadString
 ReadString:
-  addiu $2, $0, SC_ReadString
-  syscall
-  j $31
-  .end ReadString
+	addiu $2, $0, SC_ReadString
+	syscall
+	j	$31
+	.end ReadString
 
-
-  .globl PrintString
-  .ent PrintString
+	.globl PrintString
+	.ent PrintString
 PrintString:
-  addiu $2, $0, SC_PrintString
-  syscall
-  j $31
-  .end PrintString
+	addiu $2, $0, SC_PrintString
+	syscall
+	j	$31
+	.end PrintString
+	
 
-  .globl Help
-  .ent Help
-Help:
-  addiu $2, $0, SC_Help
-  syscall
-  j $31
-  .end Help
+	.globl Seek
+	.ent	Seek
+Seek :
+	addiu $2, $0, SC_Seek
+	syscall
+	j	$31
+	.end Seek
 
-  .globl PrintASCII
-  .ent PrintASCII
-PrintASCII:
-  addiu $2, $0, SC_PrintASCII
-  syscall
-  j $31
-  .end PrintASCII
 
-  .globl Sort
-  .ent Sort
-Sort:
-  addiu $2, $0, SC_Sort
-  syscall
-  j $31
-  .end Sort
+	.globl CreateSemaphore
+	.ent	CreateSemaphore
+CreateSemaphore :
+	addiu $2, $0, SC_CreateSemaphore
+	syscall
+	j	$31
+	.end CreateSemaphore
 
-  //additional
+	.globl Wait
+	.ent	Wait
+Wait :
+	addiu $2, $0, SC_Wait
+	syscall
+	j	$31
+	.end Wait
+
+	.globl Signal
+	.ent	Signal
+Signal :
+	addiu $2, $0, SC_Signal
+	syscall
+	j	$31
+	.end Signal
+
+
+	.globl Sum
+	.ent	Sum
+Sum :
+	addiu $2, $0, SC_Sum
+	syscall
+	j	$31
+	.end Sum
 
 /* dummy function to keep gcc happy */
         .globl  __main
@@ -215,3 +227,4 @@ Sort:
 __main:
         j       $31
         .end    __main
+

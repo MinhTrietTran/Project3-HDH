@@ -33,7 +33,6 @@
 
 class BitMap {
   public:
-    bool Bitmap::CheckEnoughMemory(int numNeeded);
     BitMap(int nitems);		// Initialize a bitmap, with "nitems" bits
 				// initially, all bits are cleared.
     ~BitMap();			// De-allocate bitmap

@@ -6,7 +6,7 @@
 #
 #    Nachos assumes that the location of the program startup routine (the
 # 	location the kernel jumps to when the program initially starts up)
-#       is at location 0.  This means: start.o must be the first .o passed
+#       is at location 0.  This means: start.o must be the first .o passed 
 # 	to ld, in order for the routine "Start" to be loaded at location 0
 #
 
@@ -35,9 +35,7 @@ CPP = gcc -E
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 
-all: halt shell matmult sort testchar teststring testint testhelp testascii testsort
-
-
+all: halt shell matmult sort SvVn sinhvien voinuoc cat copy createfile echo scheduler ping pong checksum
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.c > strt.s
@@ -68,13 +66,11 @@ matmult: matmult.o start.o
 	$(LD) $(LDFLAGS) start.o matmult.o -o matmult.coff
 	../bin/coff2noff matmult.coff matmult
 
-
-
-testFunc.o: testFunc.c
-	$(CC) $(CFLAGS) -c testFunc.c
-testFunc: testFunc.o start.o
-	$(LD) $(LDFLAGS) start.o testFunc.o -o testFunc.coff
-	../bin/coff2noff testFunc.coff testFunc
+echo.o: echo.c
+	$(CC) $(CFLAGS) -c echo.c
+echo: echo.o start.o
+	$(LD) $(LDFLAGS) start.o echo.o -o echo.coff
+	../bin/coff2noff echo.coff echo
 
 createfile.o: createfile.c
 	$(CC) $(CFLAGS) -c createfile.c
@@ -82,52 +78,64 @@ createfile: createfile.o start.o
 	$(LD) $(LDFLAGS) start.o createfile.o -o createfile.coff
 	../bin/coff2noff createfile.coff createfile
 
-testchar.o: testchar.c
-	$(CC) $(CFLAGS) -c testchar.c
-testchar: testchar.o start.o
-	$(LD) $(LDFLAGS) start.o testchar.o -o testchar.coff
-	../bin/coff2noff testchar.coff testchar
+cat.o: cat.c
+	$(CC) $(CFLAGS) -c cat.c
+cat: cat.o start.o
+	$(LD) $(LDFLAGS) start.o cat.o -o cat.coff
+	../bin/coff2noff cat.coff cat
 
-teststring.o: teststring.c
-	$(CC) $(CFLAGS) -c teststring.c
-teststring: teststring.o start.o
-	$(LD) $(LDFLAGS) start.o teststring.o -o teststring.coff
-	../bin/coff2noff teststring.coff teststring
-
-testint.o: testint.c
-	$(CC) $(CFLAGS) -c testint.c
-testint: testint.o start.o
-	$(LD) $(LDFLAGS) start.o testint.o -o testint.coff
-	../bin/coff2noff testint.coff testint
-
-testhelp.o: testhelp.c
-	$(CC) $(CFLAGS) -c testhelp.c
-testhelp: testhelp.o start.o
-	$(LD) $(LDFLAGS) start.o testhelp.o -o testhelp.coff
-	../bin/coff2noff testhelp.coff testhelp
-
-testascii.o: testascii.c
-	$(CC) $(CFLAGS) -c testascii.c
-testascii: testascii.o start.o
-	$(LD) $(LDFLAGS) start.o testascii.o -o testascii.coff
-	../bin/coff2noff testascii.coff testascii
-
-testsort.o: testsort.c
-	$(CC) $(CFLAGS) -c testsort.c
-testsort: testsort.o start.o
-	$(LD) $(LDFLAGS) start.o testsort.o -o testsort.coff
-	../bin/coff2noff testsort.coff testsort
+copy.o: copy.c
+	$(CC) $(CFLAGS) -c copy.c
+copy: copy.o start.o
+	$(LD) $(LDFLAGS) start.o copy.o -o copy.coff
+	../bin/coff2noff copy.coff copy
 
 
+ping.o: ping.c
+	$(CC) $(CFLAGS) -c ping.c
+ping: ping.o start.o
+	$(LD) $(LDFLAGS) start.o ping.o -o ping.coff
+	../bin/coff2noff ping.coff ping
+
+pong.o: pong.c
+	$(CC) $(CFLAGS) -c pong.c
+pong: pong.o start.o
+	$(LD) $(LDFLAGS) start.o pong.o -o pong.coff
+	../bin/coff2noff pong.coff pong
+
+scheduler.o: scheduler.c
+	$(CC) $(CFLAGS) -c scheduler.c
+scheduler: scheduler.o start.o
+	$(LD) $(LDFLAGS) start.o scheduler.o -o scheduler.coff
+	../bin/coff2noff scheduler.coff scheduler
 
 
+SvVn.o: SvVn.c
+	$(CC) $(CFLAGS) -c SvVn.c
+SvVn: SvVn.o start.o
+	$(LD) $(LDFLAGS) start.o SvVn.o -o SvVn.coff
+	../bin/coff2noff SvVn.coff SvVn
 
+voinuoc.o: voinuoc.c
+	$(CC) $(CFLAGS) -c voinuoc.c
+voinuoc: voinuoc.o start.o
+	$(LD) $(LDFLAGS) start.o voinuoc.o -o voinuoc.coff
+	../bin/coff2noff voinuoc.coff voinuoc
 
+sinhvien.o: sinhvien.c
+	$(CC) $(CFLAGS) -c sinhvien.c
+sinhvien: sinhvien.o start.o
+	$(LD) $(LDFLAGS) start.o sinhvien.o -o sinhvien.coff
+	../bin/coff2noff sinhvien.coff sinhvien
 
+checkfile.o: checkfile.c
+	$(CC) $(CFLAGS) -c checkfile.c
+checkfile: checkfile.o start.o
+	$(LD) $(LDFLAGS) start.o checkfile.o -o checkfile.coff
+	../bin/coff2noff checkfile.coff checkfile
 
-
-
-
-
-
-
+checksum.o: checksum.c
+	$(CC) $(CFLAGS) -c checksum.c
+checksum: checksum.o start.o
+	$(LD) $(LDFLAGS) start.o checksum.o -o checksum.coff
+	../bin/coff2noff checksum.coff checksum

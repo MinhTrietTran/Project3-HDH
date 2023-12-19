@@ -1,3 +1,14 @@
+/////////////////////////////////////////////////
+// 	DH KHTN - DHQG TPHCM			/
+// 	1512034 Nguyen Dang Binh		/
+// 	1512042 Nguyen Thanh Chung		/
+// 	1512123 Hoang Ngoc Duc			/
+/////////////////////////////////////////////////
+//
+//	FILE synchcons.h
+//	Khai bao cac interface cua lop SynchConsole
+
+
 // CAE - MULTI - SYNCHCONSOLE DEFINITION
 
 #include "console.h"
@@ -16,3 +27,4 @@ private:
 } ;
 
 // CAE - MULTI - END SECTION
+
