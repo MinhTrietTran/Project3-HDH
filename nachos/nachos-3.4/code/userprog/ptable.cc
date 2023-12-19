@@ -109,6 +109,7 @@ int PTable::ExitUpdate(int ec) {
 	return ec;
 }
 
+
 int PTable::JoinUpdate(int id) {
     // Ta kiểm tra tính hợp lệ của processID id và kiểm tra tiến trình gọi Join có phải là cha của tiến trình
 	// có processID là id hay không. Nếu không thỏa, ta báo lỗi hợp lý và trả về -1.
