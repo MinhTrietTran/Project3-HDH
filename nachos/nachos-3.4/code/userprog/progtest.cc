@@ -14,6 +14,30 @@
 #include "addrspace.h"
 #include "synch.h"
 
+
+
+void
+StartProcess_2(int pid)
+{
+    char* fileName = pTab->GetFileName(pid);
+    AddrSpace *space;
+    space = new AddrSpace(fileName);
+    if(space == NULL) {
+        printf("\nPCB::EXEC: Can not create Addrspace\n");
+        return;
+    }
+    currentThread->space = space;
+
+
+    space->InitRegisters();		// set the initial register values
+    space->RestoreState();		// load page table register
+
+    machine->Run();			// jump to the user progam
+    ASSERT(FALSE);			// machine->Run never returns;
+					// the address space exits
+					// by doing the syscall "exit"
+}
+
 //----------------------------------------------------------------------
 // StartProcess
 // 	Run a user program.  Open the executable, load it into
